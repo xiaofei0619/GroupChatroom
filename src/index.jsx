@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Input } from './components/Input';
+import { ChatRoom } from './components/ChatRoom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 ReactDOM.render(
   <React.StrictMode> 
-    <Input />
+    <ChatRoom />
   </React.StrictMode>,
   document.getElementById('root')
 );
