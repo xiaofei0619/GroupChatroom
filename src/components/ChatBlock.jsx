@@ -24,7 +24,14 @@ export class ChatBlock extends React.Component {
             justifyContent: 'space-between',
             fontSize: '85%'
         }
-        return <div style={outerStyle}>
+        // const date = new Date(this.props.timestamp)
+        // const timestamp = (date.getMonth()+1)+"/"+
+        //                     date.getDate()+"/"+
+        //                     date.getFullYear()+" "+
+        //                     date.getHours()+":"+
+        //                     date.getMinutes()+":"+
+        //                     date.getSeconds()
+        return <div style={outerStyle}>    
             <div style={chatboxStyle}>{this.props.userMessage}</div>
             <div style={senderStyle}>
                 <div>{this.props.userName}</div>

@@ -32,14 +32,9 @@ export class UserInput extends React.Component {
             />
             <InputGroup.Append>
                 <Button variant="outline-info" onClick={()=>{
-                    const date = new Date()
-                    const timestamp = (date.getMonth()+1)+"/"+
-                                        date.getDate()+"/"+
-                                        date.getFullYear()+" "+
-                                        date.getHours()+":"+
-                                        date.getMinutes()+":"+
-                                        date.getSeconds()
-                    this.props.onSendMessage(timestamp, this.state.userInput)
+                    const date = Date.now()
+                    console.log(date)
+                    this.props.onSendMessage(date, this.state.userInput)
                     this.setState({userInput: ""})
                 }}>Send</Button>
             </InputGroup.Append>
