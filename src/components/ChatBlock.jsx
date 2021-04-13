@@ -2,41 +2,61 @@ import React from 'react';
 
 export class ChatBlock extends React.Component {  
     render() {
-        const outerStyle = {
+        const selfOuterStyle = {
             display: 'flex',
-            flexDirection: 'column',
-            width: '300px',
-            margin: 'auto',
-            marginBottom: '8px'
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            width: '98%',
+            marginBottom: '8px',
+            //marginRight: '10px',
+            //backgroundColor: 'yellow'
+        }
+        const othersOuterStyle = {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            width: '100%',
+            marginBottom: '8px',
+            marginLeft: '10px'
+            //backgroundColor: 'red'
         }
         const chatboxStyle = {
-            width: '100%',
+            width: '300px',
             height: 'auto',
             boxSizing: 'border-box',
             backgroundColor: 'lightblue',
             padding: '10px',
             borderRadius: '10px',
-            fontFamily: 'Arial'    
+            fontFamily: 'Arial',
+            wordWrap: 'break-word'  
         }
         const senderStyle = {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            fontSize: '85%'
+            fontSize: '85%',
+            width: '300px'
         }
-        // const date = new Date(this.props.timestamp)
-        // const timestamp = (date.getMonth()+1)+"/"+
-        //                     date.getDate()+"/"+
-        //                     date.getFullYear()+" "+
-        //                     date.getHours()+":"+
-        //                     date.getMinutes()+":"+
-        //                     date.getSeconds()
-        return <div style={outerStyle}>    
-            <div style={chatboxStyle}>{this.props.userMessage}</div>
-            <div style={senderStyle}>
-                <div>{this.props.userName}</div>
-                <div>{this.props.timestamp}</div>
+        if(this.props.flag === 'self'){
+            return <div style={selfOuterStyle}>
+                <div>
+                    <div style={chatboxStyle}>{this.props.userMessage}</div>
+                    <div style={senderStyle}>
+                        <div>{this.props.userName}</div>
+                        <div>{this.props.timestamp}</div>
+                    </div>
+                </div> 
             </div>
-        </div>
+        }else if(this.props.flag === 'others'){
+            return <div style={othersOuterStyle}> 
+                <div>
+                    <div style={chatboxStyle}>{this.props.userMessage}</div>
+                    <div style={senderStyle}>
+                        <div>{this.props.userName}</div>
+                        <div>{this.props.timestamp}</div>
+                    </div>
+                </div>   
+            </div>
+        }
     }
 }

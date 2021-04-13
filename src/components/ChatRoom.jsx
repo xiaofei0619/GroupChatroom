@@ -8,6 +8,7 @@ export class ChatRoom extends React.Component {
     constructor(input) {
         super(input)
         this.debugCount = 0;
+        this.myrender = null;
         this.client = new AxiosRequests();
         this.messagesDiv = React.createRef();
         this.webOpenTime = Date.now() - 2592000000;
@@ -20,37 +21,29 @@ export class ChatRoom extends React.Component {
     }
 
     componentDidMount() {
-        //Work on the backend stuff after render()
-        // setTimeout(()=>{
-        //     console.log('scrolling')
-        //     this.scrollToMyRef()
-        // }, 5000)
-
-        this.getHistory()
-        
+        this.getHistory()       
         // setTimeout(()=>{
         //     this.getHistory()
         // }, 1000);
-
-        var myrender = setInterval(()=>{
+        this.myrender = setInterval(()=>{
             this.getHistory()
-        }, 10000)
-
-        if(this.debugCount === 10){
-            clearInterval(myrender)
-        }
+        }, 1000)      
     }
 
     scrollToMyRef() {
-        const scroll =
-            this.messagesDiv.current.scrollHeight - window.innerHeight;
-          //this.messagesDiv.current.scrollHeight -
-          //this.messagesDiv.current.clientHeight;
-        //console.log(window.innerHeight)
-        //console.log(this.messagesDiv.current.clientHeight)
-        console.log(scroll)
-        //this.messagesDiv.current.scrollTo(0, 400);
-        window.scrollTo(0, scroll+45)
+        console.log("testing scroll");
+        console.log(this.messagesDiv.current);
+        if(this.messagesDiv.current !== null){
+            const scroll = this.messagesDiv.current.scrollHeight - window.innerHeight;
+            
+            //this.messagesDiv.current.scrollHeight -
+            //this.messagesDiv.current.clientHeight;
+            //console.log(window.innerHeight)
+            //console.log(this.messagesDiv.current.clientHeight)
+            console.log(scroll)
+            //this.messagesDiv.current.scrollTo(0, 400);
+            window.scrollTo(0, scroll+45)
+        }
     }
 
     render() {    
@@ -80,7 +73,25 @@ export class ChatRoom extends React.Component {
                             date.getHours()+":"+
                             date.getMinutes()+":"+
                             date.getSeconds()
-            return <ChatBlock key={index} userName={item[0]} timestamp={timestamp} userMessage={item[2]}/>
+            // const othersStyle = {
+            //     width: '100%',
+            //     //display: 'flex',
+            //     //flexDirection: 'column',
+            //     float: 'left',
+            //     backgroundColor: 'yellow'
+            // }
+            // const selfStyle = {
+            //     width: '100%',
+            //     //display: 'flex',
+            //     //flexDirection: 'column',
+            //     float: 'right',
+            //     backgroundColor: 'red'
+            // }
+            if(item[0] === this.state.userName){
+                return <ChatBlock key={index} userName={item[0]} timestamp={timestamp} userMessage={item[2]} flag={'self'}/>         
+            }else {
+                return <ChatBlock key={index} userName={item[0]} timestamp={timestamp} userMessage={item[2]} flag={'others'}/>   
+            }
         })       
     }
 
@@ -110,5 +121,12 @@ export class ChatRoom extends React.Component {
         this.setState({history: chatHistory})
         console.log(this.state.history)
         this.debugCount += 1
+        console.log(this.debugCount)
+        this.scrollToMyRef()
+
+        if(this.debugCount === 3){
+            clearInterval(this.myrender)
+        }
+
     }
 }
