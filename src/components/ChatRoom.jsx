@@ -1,7 +1,7 @@
 import React from 'react';
 import { Login } from './Login';
 import { ChatBlock } from './ChatBlock';
-import { UserInput } from './UserInput';
+import { ChatroomUserInput } from './ChatroomUserInput';
 import { AxiosRequests } from '../axios_requests';
 
 export class ChatRoom extends React.Component {
@@ -34,12 +34,7 @@ export class ChatRoom extends React.Component {
         console.log("testing scroll");
         console.log(this.messagesDiv.current);
         if(this.messagesDiv.current !== null){
-            const scroll = this.messagesDiv.current.scrollHeight - window.innerHeight;
-            
-            //this.messagesDiv.current.scrollHeight -
-            //this.messagesDiv.current.clientHeight;
-            //console.log(window.innerHeight)
-            //console.log(this.messagesDiv.current.clientHeight)
+            const scroll = this.messagesDiv.current.scrollHeight - window.innerHeight; 
             console.log(scroll)
             //this.messagesDiv.current.scrollTo(0, 400);
             window.scrollTo(0, scroll+45)
@@ -73,20 +68,7 @@ export class ChatRoom extends React.Component {
                             date.getHours()+":"+
                             date.getMinutes()+":"+
                             date.getSeconds()
-            // const othersStyle = {
-            //     width: '100%',
-            //     //display: 'flex',
-            //     //flexDirection: 'column',
-            //     float: 'left',
-            //     backgroundColor: 'yellow'
-            // }
-            // const selfStyle = {
-            //     width: '100%',
-            //     //display: 'flex',
-            //     //flexDirection: 'column',
-            //     float: 'right',
-            //     backgroundColor: 'red'
-            // }
+            
             if(item[0] === this.state.userName){
                 return <ChatBlock key={index} userName={item[0]} timestamp={timestamp} userMessage={item[2]} flag={'self'}/>         
             }else {
@@ -96,10 +78,12 @@ export class ChatRoom extends React.Component {
     }
 
     renderUserInput() {
-        return <UserInput onSendMessage={async (newTimestamp, newMessage)=>{
+        return <ChatroomUserInput goToChatbot={() => {
+            this.props.goToChatbot()
+        }} onSendMessage={async (newTimestamp, newMessage) => {
             await this.client.postMessage(this.state.userName, newTimestamp, newMessage)
             await this.getHistory()
-        }}/>
+        }} />
     }
 
     async getHistory() {

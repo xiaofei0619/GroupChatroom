@@ -4,7 +4,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 
 
-export class UserInput extends React.Component {
+export class ChatroomUserInput extends React.Component {
     constructor(input) {
         super(input)
         this.state = {
@@ -18,7 +18,6 @@ export class UserInput extends React.Component {
             right: "0px",
             bottom: '0px',
             position: 'fixed',
-            //backgroundColor: 'green'
         }
         return <InputGroup style={stylex}>
             <FormControl
@@ -31,12 +30,15 @@ export class UserInput extends React.Component {
                 placeholder="Start Chatting..."
             />
             <InputGroup.Append>
-                <Button variant="outline-info" onClick={()=>{
+                <Button variant="outline-info" onClick={() => {
                     const date = Date.now()
                     console.log(date)
                     this.props.onSendMessage(date, this.state.userInput)
-                    this.setState({userInput: ""})
+                    this.setState({ userInput: "" })
                 }}>Send</Button>
+                <Button variant="outline-info" onClick={() => {
+                    this.props.goToChatbot()
+                }}>ChatBot 🤖</Button>
             </InputGroup.Append>
 
         </InputGroup>

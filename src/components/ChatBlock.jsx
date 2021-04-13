@@ -9,7 +9,6 @@ export class ChatBlock extends React.Component {
             width: '98%',
             marginBottom: '8px',
             //marginRight: '10px',
-            //backgroundColor: 'yellow'
         }
         const othersOuterStyle = {
             display: 'flex',
@@ -18,7 +17,6 @@ export class ChatBlock extends React.Component {
             width: '100%',
             marginBottom: '8px',
             marginLeft: '10px'
-            //backgroundColor: 'red'
         }
         const chatboxStyle = {
             width: '300px',
