@@ -1,70 +1,59 @@
-# Getting Started with Create React App
+# Online Group Chatroom
+## Architecture
+In this project, JavaScript frontend library React, HTTP Client library Axios and routing library React Router are applied on the frontend. Several AWS services are also used for both backend and frontend: DynamoDB, Lambda, API Gateway, S3, CloudFront. Below is the dataflow diagram:
+![Dataflow](https://raw.githubusercontent.com/xiaofei0619/ReactExercise/master/documentation/DataFlow.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Results
+Web link: http://d3mk3y4oeekz8k.cloudfront.net/<br />
+New user needs to create a username:
+![Dataflow](https://raw.githubusercontent.com/xiaofei0619/ReactExercise/master/documentation/Login.png)
+Enter the chatroom and get chat history:
+![Dataflow](https://raw.githubusercontent.com/xiaofei0619/ReactExercise/master/documentation/Chatroom.png)
+Enter new message at the end of the webpage, and click **Send** button:
+![Dataflow](https://raw.githubusercontent.com/xiaofei0619/ReactExercise/master/documentation/Input.png)
+Render another web page by clicking **ChatBot** button:
+![Dataflow](https://raw.githubusercontent.com/xiaofei0619/ReactExercise/master/documentation/Chatbot.png)
+Go back to chatroom by clicking **Back To ChatRoom** button.
 
-In the project directory, you can run:
+## Backend
+`Database with DynamoDB`\
+A table contains all the messages is built with Amazon DynamoDB which is a NoSQL database. Each item in the table contains 3 elements: userName, timestamp and userMessage. UserName is used as the Partition key and timestamp is used as the Sort key. Therefore, it is easier to scan the table or make a query.
+![Dataflow](https://raw.githubusercontent.com/xiaofei0619/ReactExercise/master/documentation/MessageTable.png)
 
-### `npm start`
+`Backend logic with Serverless Computing Platform Lambda`\
+Write Lambda Function with DynamoDB Node.js SDK. There are only 2 methods.<br/>
+1. When httpMethod is "GET"<br/>
+Scan all the messages after the given time in queryStringParameters from the DynamoDB table by calling function scanHistory(timeStamp).</br>
+<br/>In scanHistory(timeStamp) function, we use method scan() and Filter Expression to get all the messages we require. Since elements in DynamoDB table is randomly stored, we need to sort the messages based on the timestamp. Then return the data in JSON format.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+2. When httpMethod is "POST"<br/>
+First parse the event body to get the three elements of this new message: username, timestamp and usermessage. Then, call function addMessage(name, time, message).<br/>
+<br/>In addMessage(name, time, message) function, we combine the three inputs into an object for key "Item". Then, call use method put() to put this new "Item" into the table.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+After "GET"/"POST", return the object containing the status code, CORS setting and required data.
 
-### `npm test`
+`Create APIs with API Gateway`\
+Lambda function is linked to APIs in API Gateway. There are 2 methods of type LAMBDA_PROXY: GET and POST.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Frontend
+`Design Idea`\
+All components are written as classes: Login, ChatBlock, ChatroomUserInput, ChatRoom and ChatBot. Function render() is in the base component ChatRoom.\
+<br/>
+If the user is new, render Login Component for the user to create username. Once the user click "Join", store the username in localStorage, update the username state, and record the web-open time simultaneously. Then, scan the recent 1-month history based on that time because we don't want show all the history in case it is too long. \
+<br/>
+We modify the history into an array of array and store it as a state called history. Now, we render each message in history with ChatBot class. At the same time, we render the ChatroomUserInput which allows users to enter new messages.\
+<br/>
+Everytime there is a user sends new message, call postMessage() function to store the new message to backend table, and then call scanHistory() function to update the state and render webpage. Besides of that, we call scanHistory() function every second to make the live chat **realtime**.
 
-### `npm run build`
+`Send HTTP Request`\
+To scan the chat history or post new chat message, we send HTTP requests with HTTP client library called Axios. First create the http client with the URL provided by API Gateway. Then, use the methods get() and post() provided by Axios.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+`Navigation between Components`\
+Initially, the plan was to create a Chatbot with GCP Dialogflow service for the user to communicate with. Due to the dependency problem, I put it as future work. However, I still use React Router to reserve the second page for that feature. There are two *routes*, one is going to ChatRoom component, the other is going to ChatBot component. In *Router* and *Switch*, combine the hook *useHistory()* with the buttons to achieve the navigation between the *Routes*.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Deployment
+To deploy this React web project, first build the project and store the files in an AWS S3 bucket. Now, create a CloudFront distribution linked to the S3 bucket. Note: for the entire project, use AWS IAM to manage the role and permissions for accessing different services.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
