@@ -2,11 +2,15 @@ import React from 'react';
 
 export class ChatBlock extends React.Component {  
     render() {
+        const columnStyle = {
+            display: 'flex',
+            flexDirection: 'col'
+        }
         const selfOuterStyle = {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'flex-end',
-            width: '98%',
+            width: '99%',
             marginBottom: '8px',
             //marginRight: '10px',
         }
@@ -35,25 +39,29 @@ export class ChatBlock extends React.Component {
             fontSize: '85%',
             width: '300px'
         }
-        if(this.props.flag === 'self'){
-            return <div style={selfOuterStyle}>
-                <div>
-                    <div style={chatboxStyle}>{this.props.userMessage}</div>
-                    <div style={senderStyle}>
-                        <div>{this.props.userName}</div>
-                        <div>{this.props.timestamp}</div>
+        if (this.props.flag === 'self') {
+            return <div style={columnStyle}>
+                <div style={selfOuterStyle}>
+                    <div>
+                        <div style={chatboxStyle}>{this.props.userMessage}</div>
+                        <div style={senderStyle}>
+                            <div>{this.props.userName}</div>
+                            <div>{this.props.timestamp}</div>
+                        </div>
                     </div>
-                </div> 
+                </div>
             </div>
-        }else if(this.props.flag === 'others'){
-            return <div style={othersOuterStyle}> 
-                <div>
-                    <div style={chatboxStyle}>{this.props.userMessage}</div>
-                    <div style={senderStyle}>
-                        <div>{this.props.userName}</div>
-                        <div>{this.props.timestamp}</div>
+        } else if (this.props.flag === 'others') {
+            return <div style={columnStyle}>
+                <div style={othersOuterStyle}>
+                    <div>
+                        <div style={chatboxStyle}>{this.props.userMessage}</div>
+                        <div style={senderStyle}>
+                            <div>{this.props.userName}</div>
+                            <div>{this.props.timestamp}</div>
+                        </div>
                     </div>
-                </div>   
+                </div>
             </div>
         }
     }
