@@ -55,6 +55,20 @@ Initially, the plan was to create a Chatbot with GCP Dialogflow service for the 
 <br/>
 ## Deployment
 To deploy this React web project, first build the project and store the files in an AWS S3 bucket. Now, create a CloudFront distribution linked to the S3 bucket. Note: for the entire project, use AWS IAM to manage the role and permissions for accessing different services.
+<br/>
+## Testing
+Although I have not learned how to write unittests on web applications, I did a lot of manual testing during the development. When I worked on the frontend components, it's quite useful to show and adjust the component layers with background color. However, it took much more time testing the backend logic. Here are several methods I use:\
+<br/>
+1. Use console.log() to print out any information or data and see if that's what I expected
+2. Use AWS CloudWatch to monitor the HTTP requests
+3. Use try... catch... to catch any possible failures
+4. Setup debug counter in frontend render function which prevents a huge amount of unnecessary HTTP requests\
+<br/>
+During the testing, I found a bug about CORS(Cross-Origin Resource Sharing) which is an HTTP protocal. It checks the permissions in various browsers to see whether the API can be used or should be blocked. I got the errors because I did not do any CORS setting. Later I found there is a HTTP method called OPTIONS on API Gateway, it is used to check permissions. Based on its returning event object, I setup my Access Control variables which solved the problem.
+<br/>
+## Future Work
+1. Implement Chatbot with Google Cloud Service - Dialogflow, Express.js, MongoDB, etc.
+2. Login authentication, send requests with token.
 
 
 
