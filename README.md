@@ -66,7 +66,9 @@ Although I have not learned how to write unittests on web applications, I did a 
 <br/>
 During the testing, I found a bug about CORS(Cross-Origin Resource Sharing) which is an HTTP protocal. It checks the permissions in various browsers to see whether the API can be used or should be blocked. I got the errors because I did not do any CORS setting. Later I found there is a HTTP method called OPTIONS on API Gateway, it is used to check permissions. Based on its returning event object, I setup my Access Control variables which solved the problem.
 <br/>
+
 ## Future Work
+
 1. Implement Chatbot with Google Cloud Service - Dialogflow, Express.js, MongoDB, etc.
 2. Login authentication, send requests with token.
 
